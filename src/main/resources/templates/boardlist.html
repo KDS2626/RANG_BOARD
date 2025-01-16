@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시물 리스트 페이지</title>
+</head>
+
+<style>
+  .layout{
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 40px;
+  }
+</style>
+
+<body>
+
+<div class="layout">
+  <!-- 글작성 버튼 추가 -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <a href="/board/write">
+      <button>글 작성</button>
+    </a>
+  </div>
+
+  <!-- 검색 결과가 있을 때만 테이블 표시 -->
+  <div th:if="${not #lists.isEmpty(list)}">
+    <table>
+      <thead>
+      <tr>
+        <th>글번호</th>
+        <th>제목</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="board : ${list}">
+        <td th:text="${board.id}">1</td>
+        <td>
+          <a  th:text="${board.title}" th:href="@{/board/view(id=${board.id})}"></a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- 페이지 네비게이션 -->
+    <div>
+      <a th:if="${prevPage >= 0}" th:href="@{/board/list(page=${prevPage})}">처음으로</a>
+      현재 <span th:text="${nowPage}">1</span> 페이지 입니다.
+      <a th:if="${nextPage < endPage}" th:href="@{/board/list(page=${nextPage})}">다음</a>
+    </div>
+
+    <div>
+      <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+        <a th:if="${page != nowPage}" th:href="@{/board/list(page=${page - 1}, searchKeyword=${param.searchKeyword})}" th:text="${page}"></a>
+        <strong th:if="${page == nowPage}" th:text="${page}" style="color: red"></strong>
+      </th:block>
+    </div>
+
+  </div>
+
+  <!-- 검색 결과가 없을 때 "검색결과 없음" 메시지 표시 -->
+  <div th:if="${#lists.isEmpty(list)}" style="text-align: center; margin-top: 20px;">
+    <p>검색결과가 없습니다.</p>
+  </div>
+
+  <!-- 검색 폼 -->
+  <form th:action="@{/board/list}" method="get" style="text-align: center;">
+    <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요" th:value="${param.searchKeyword}">
+    <button type="submit">검색</button>
+
+    <!-- 검색 초기화 버튼, 검색어가 있을 때만 표시 -->
+    <div th:if="${param.searchKeyword != null and param.searchKeyword != ''}" style="margin-top: 10px;">
+      <!-- 초기화 버튼: 검색어 없이 list로 이동 -->
+      <a href="/board/list" style="margin-left: 10px;">
+        <button type="button">검색 초기화</button>
+      </a>
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

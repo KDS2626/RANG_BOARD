@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시물 상세보기</title>
+</head>
+
+<body>
+<div class="layout">
+    <h1 th:text="${board.title}">게시물 제목</h1>
+    <p th:text="${board.content}">게시물 내용</p>
+
+    <!-- 파일이 있을 경우 이미지 및 다운로드 링크 표시 -->
+    <div th:if="${board.filename != null}">
+        <!-- 이미지가 파일이라면 그 파일을 이미지로 보여주기 -->
+        <img th:src="@{${board.filepath}}" alt="Uploaded Image" style="max-width: 100%; height: auto; margin-bottom: 10px;" />
+        <br/>
+        <a th:href="@{${board.filepath}}" download>다운로드</a>
+    </div>
+
+    <a href="/board/modify/{id}" th:href="@{/board/modify/{id}(id=${board.id})}">수정</a>
+    <a href="/board/delete?id={id}" th:href="@{/board/delete?id=${board.id}}">삭제</a>
+</div>
+</body>
+</html>
