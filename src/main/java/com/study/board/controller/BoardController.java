@@ -22,6 +22,12 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
+    // 기본 페이지 접속 시 /board/list로 리다이렉트
+    @GetMapping("/")
+    public String redirectToBoardList() {
+        return "redirect:/board/list";  // /board/list로 리다이렉트
+    }
+
     @GetMapping("/board/write")
     public String boardWriteForm() {
         return "boardwrite";
